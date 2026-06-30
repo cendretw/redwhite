@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>東勢林場兩天一夜生態之旅視覺化指南</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f8fafc;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 280px;
+            }
+        }
+        .map-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: auto auto auto;
+            gap: 1rem;
+        }
+        .zone-card {
+            border-radius: 0.75rem;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        .zone-card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased">
+
+    <!-- 
+    Palette Name: Energetic Nature (Teal, Orange, Yellow)
+    
+    Plan Summary:
+    1. Introduction: Hook the reader with the destination's appeal.
+    2. Spatial Orientation: Visualize the park's layout using a CSS grid map to help users understand the geography.
+    3. Energy & Activity Tracking: Use an Area Chart to show the physical intensity of the itinerary over 48 hours.
+    4. Time Management: Use a Donut Chart to break down how time is spent across different activity types.
+    5. Packing Priorities & Interactive Checklist: Radar chart showing priorities, coupled with a dynamic, stateful checkbox checklist showing live packing progress.
+    
+    Visualization Choices:
+    - Data Point: Park Geography -> Goal: Organize -> Method: Structured HTML/CSS Grid (No SVG/Mermaid) -> Justification: Clearly shows relative positions without complex libraries.
+    - Data Point: Activity Intensity over Time -> Goal: Change -> Method: Chart.js Area Chart -> Justification: Perfect for showing continuous fluctuation in physical exertion over a timeline.
+    - Data Point: Time Allocation -> Goal: Compare/Composition -> Method: Chart.js Donut Chart -> Justification: Effectively displays proportions of a whole (24/48 hours).
+    - Data Point: Packing Category Importance -> Goal: Compare -> Method: Chart.js Radar Chart -> Justification: Excellent for scoring multiple qualitative categories (like Mosquito vs Warmth need) on a single visual plane.
+    
+    Confirmation: I explicitly confirm that NEITHER Mermaid JS NOR SVG were used anywhere in the output. All charts are Canvas-based, and icons are Unicode.
+    -->
+
+    <header class="bg-teal-600 text-white py-16 px-6 text-center shadow-lg rounded-b-3xl">
+        <h1 class="text-4xl md:text-5xl font-black mb-4 tracking-wider">東勢林場生態之旅</h1>
+        <p class="text-lg md:text-xl font-light max-w-2xl mx-auto opacity-90">兩天一夜深度森呼吸｜行程規劃與視覺化分析指南</p>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-16">
+
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-10">
+            <div class="mb-8 border-b-4 border-orange-500 inline-block pb-2">
+                <h2 class="text-3xl font-bold text-slate-800">📍 園區空間與動線解析</h2>
+            </div>
+            <p class="text-lg mb-8 leading-relaxed text-slate-600">
+                東勢林場佔地廣闊，為了讓您的行程不走冤枉路，我們將園區分為五大核心區域。第一天的行程主要集中在中央、西區與東區的動態活動，第二天清晨則向北區的原始林道邁進。透過下方的空間分佈圖，您可以快速掌握各景點的相對位置。
+            </p>
+            
+            <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
+                <h3 class="text-xl font-bold text-center mb-6 text-teal-700">📌 園區相對方位圖</h3>
+                <div class="map-grid max-w-3xl mx-auto">
+                    <div class="col-start-2 zone-card bg-emerald-100 border-2 border-emerald-300">
+                        <div class="text-2xl mb-2">🌲</div>
+                        <h4 class="font-bold text-emerald-800">北區：森林深處</h4>
+                        <p class="text-xs text-emerald-700 mt-1">觀音洞步道<br>楓林小徑、賞螢區</p>
+                    </div>
+                    
+                    <div class="col-start-1 row-start-2 zone-card bg-sky-100 border-2 border-sky-300">
+                        <div class="text-2xl mb-2">🦕</div>
+                        <h4 class="font-bold text-sky-800">西區：自然生態</h4>
+                        <p class="text-xs text-sky-700 mt-1">天空步道<br>侏儸紀公園</p>
+                    </div>
+                    
+                    <div class="col-start-2 row-start-2 zone-card bg-orange-100 border-2 border-orange-400 relative z-10 transform scale-105">
+                        <div class="text-2xl mb-2">🏢</div>
+                        <h4 class="font-bold text-orange-800">中央區：核心服務</h4>
+                        <p class="text-xs text-orange-700 mt-1">遊客中心、會館<br>田媽媽餐廳</p>
+                    </div>
+                    
+                    <div class="col-start-3 row-start-2 zone-card bg-yellow-100 border-2 border-yellow-400">
+                        <div class="text-2xl mb-2">🧗</div>
+                        <h4 class="font-bold text-yellow-800">東區：戶外冒險</h4>
+                        <p class="text-xs text-yellow-700 mt-1">體能訓練場<br>大跳網、民俗公園</p>
+                    </div>
+                    
+                    <div class="col-start-2 row-start-3 zone-card bg-rose-100 border-2 border-rose-300">
+                        <div class="text-2xl mb-2">♨️</div>
+                        <h4 class="font-bold text-rose-800">南區：舒壓入口</h4>
+                        <p class="text-xs text-rose-700 mt-1">濯足園溫泉足浴<br>收費站</p>
+                    </div>
+                </div>
+                <p class="text-center text-sm text-slate-500 mt-6">▲ 步行邏輯：抵達(中央) ➔ 漫步(西) ➔ 運動(東) ➔ 泡腳(南) ➔ 晨起爬山(北)</p>
+            </div>
+        </section>
+
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-10">
+            <div class="mb-8 border-b-4 border-teal-500 inline-block pb-2">
+                <h2 class="text-3xl font-bold text-slate-800">📈 兩天一夜體力消耗與節奏</h2>
+            </div>
+            <p class="text-lg mb-8 leading-relaxed text-slate-600">
+                這趟旅程結合了休閒與戶外運動。下圖展示了這 48 小時內的預估體力消耗狀態。可以看到第一天下午的「體能訓練場」與第二天早上的「東豐鐵馬道」是體力消耗的最高峰，建議在這兩個時段前後安排適當的水分補充與休息。
+            </p>
+            
+            <div class="chart-container">
+                <canvas id="intensityChart"></canvas>
+            </div>
+        </section>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <section class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8 flex flex-col">
+                <div class="mb-6 border-b-4 border-yellow-500 inline-block pb-2 self-start">
+                    <h2 class="text-2xl font-bold text-slate-800">⏱️ 行程時間佔比分析</h2>
+                </div>
+                <p class="text-md mb-6 leading-relaxed text-slate-600 flex-grow">
+                    充實的行程中，我們妥善分配了各類型活動的時間。除了必要的睡眠休息外，比例最高的是「自然生態探索」，其次是「高強度體能活動」。這樣的黃金比例能確保您達到運動效果，同時又能獲得心靈上的放鬆。
+                </p>
+                <div class="chart-container" style="height: 300px;">
+                    <canvas id="timeChart"></canvas>
+                </div>
+            </section>
+
+            <section class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8 flex flex-col">
+                <div class="mb-6 border-b-4 border-rose-500 inline-block pb-2 self-start">
+                    <h2 class="text-2xl font-bold text-slate-800">🎒 行李打包防護指數</h2>
+                </div>
+                <p class="text-md mb-6 leading-relaxed text-slate-600 flex-grow">
+                    由於東勢林場位處山區生態豐富地帶，打包策略與一般城市旅遊不同。透過雷達圖分析，**防蚊蟲**與**排汗機能**是本次裝備的最高指導原則。請務必準備含有 DEET 等有效成分的防蚊液！
+                </p>
+                <div class="chart-container" style="height: 300px;">
+                    <canvas id="packingChart"></canvas>
+                </div>
+            </section>
+        </div>
+
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-10">
+            <div class="mb-6 border-b-4 border-orange-500 inline-block pb-2">
+                <h2 class="text-3xl font-bold text-slate-800">🎒 兩天一夜互動式行李打包清單</h2>
+            </div>
+            <p class="text-lg mb-8 leading-relaxed text-slate-600">
+                出發前的準備工作常常讓人丟三落四嗎？我們為您設計了這個互動式行李清單。當您開始整理行李並勾選已放入背包的物品時，上方的打包進度條會即時更新。快來試試看吧！
+            </p>
+
+            <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 mb-8">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-4">
+                    <span class="text-lg font-bold text-slate-700">💼 目前打包進度：</span>
+                    <span id="progress-percent" class="text-2xl font-black text-teal-600">0%</span>
+                </div>
+                <div class="w-full bg-slate-200 rounded-full h-4 overflow-hidden">
+                    <div id="progress-bar" class="bg-teal-500 h-4 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <p class="text-xs text-slate-500 mt-2 text-right">已完成 <span id="checked-count">0</span> / <span id="total-count">20</span> 項物品</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                    <h3 class="text-lg font-bold text-teal-700 mb-4 flex items-center">
+                        <span class="mr-2">🗂️</span> 證件與貴重物品
+                    </h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <input type="checkbox" id="item1" class="pack-item mt-1 mr-3 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500">
+                            <label for="item1" class="text-sm text-slate-600 cursor-pointer"><strong>身分證 / 健保卡</strong> (入住登記與緊急備用)</label>
+                        </li>
+                        <li class="flex items-start">
+                            <input type="checkbox" id="item2" class="pack-item mt-1 mr-3 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500">
+                            <label for="item2" class="text-sm text-slate-600 cursor-pointer"><strong>駕駛執照 / 行照</strong> (自駕、租車時備用)</label>
+                        </li>
+                        <li class="flex items-start">
+                            <input type="checkbox" id="item3" class="pack-item mt-1 mr-3 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500">
+                            <label for="item3" class="text-sm text-slate-600 cursor-pointer"><strong>現金與卡片</strong> (部分林場攤位與小店僅收現金)</label>
+                        </li>
+                        <li class="flex items-start">
+                            <input type="checkbox" id="item4" class="pack-item mt-1 mr-3 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500">
+                            <label for="item4" class="text-sm text-slate-600 cursor-pointer"><strong>大眾運輸優惠證明</strong> (搭乘客運之票根證明等)</label>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                    <h3 class="text-lg font-bold text-orange-600 mb-4 flex items-center">
+                        <span class="mr-2">👕</span> 衣物穿搭類 (洋蔥式穿法)
+                    </h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <input type="checkbox" id="item5" class="pack-item mt-1 mr-3 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500">
+                            <label for="item5" class="text-sm text-slate-600 cursor-pointer"><strong>排汗快乾衣服</strong> (準備 2 套，流汗不易著涼)</label>
+                        </li>
+                        <li class="flex items-start">
+                            <input type="checkbox" id="item6" class="pack-item mt-1 mr-3 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500">
+                            <label for="item6" class="text-sm text-slate-600 cursor-pointer"><strong>長褲 / 運動防護褲</strong> (防止山區草木劃傷與蚊蟲)</label>
+                        </li>
+                        <li class="flex items-start">
+                            <input type="checkbox" id="item7" class="pack-item mt-1 mr-3 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500">
+                            <label for="item7" class="text-sm text-slate-600 cursor-pointer"><strong>輕便防風外套/薄風衣</strong> (白天遮陽、防風微涼)</label>
+                        </li>
+                        <li class="flex items-start">
+                            <input type="checkbox" id="item8" class="pack-item mt-1 mr-3 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500">
+                            <label for="item8" class="text-sm text-slate-600 cursor-pointer"><strong>保暖中層或厚外套</strong> (山區夜間與清晨溫度較低)</label>
+                        </li>
+                        <li class="flex items-start">
+                            <input type="checkbox" id="item9" class="pack-item mt-1 mr-3 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500">
+                            <label for="item9" class="text-sm text-slate-600 cursor-pointer"><strong>好走防滑的運動鞋</strong> (步道階梯多，請避免穿涼鞋)</label>
+                        </li>
+                        <li class="flex items-start">
+                            <input type="checkbox" id="item10" class="pack-item mt-1 mr-3 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500">
+                            <label for="item10" class="text-sm text-slate-600 cursor-pointer"><strong>多備備用襪子一雙</strong> (防止踩水潮濕、運動流汗)</label>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                    <h3 class="text-lg font-bold text-rose-600 mb-4 flex items-center">
+                        <span class="mr-2">🦟</span> 個人護理與防蚊
+                    </h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <input type="checkbox" id="item11" class="pack-item mt-1 mr-3 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500">
+                            <label for="item11" class="text-sm text-slate-600 cursor-pointer"><strong>強效避蚊驅蟲劑</strong> (建議選含有派卡瑞丁成分佳)</label>
+                        </li>
+                        <li class="flex items-start">
+                            <input type="checkbox" id="item12" class="pack-item mt-1 mr-3 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500">
+                            <label for="item12" class="text-sm text-slate-600 cursor-pointer"><strong>物理防曬用品</strong> (遮陽帽、太陽眼鏡、防曬乳)</label>
+                        </li>
+                        <li class="flex items-start">
+                            <input type="checkbox" id="item13" class="pack-item mt-1 mr-3 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500">
+                            <label for="item13" class="text-sm text-slate-600 cursor-pointer"><strong>常用個人醫藥包</strong> (止癢藥膏、OK繃、暈車藥)</label>
+                        </li>
+                        <li class="flex items-start">
+                            <input type="checkbox" id="item14" class="pack-item mt-1 mr-3 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500">
+                            <label for="item14" class="text-sm text-slate-600 cursor-pointer"><strong>環保盥洗用品</strong> (自備牙刷、牙膏，響應永續低碳)</label>
+                        </li>
+                        <li class="flex items-start">
+                            <input type="checkbox" id="item15" class="pack-item mt-1 mr-3 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500">
+                            <label for="item15" class="text-sm text-slate-600 cursor-pointer"><strong>足部擦拭小毛巾</strong> (在濯足園泡腳後擦拭雙腳極好用)</label>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                    <h3 class="text-lg font-bold text-sky-600 mb-4 flex items-center">
+                        <span class="mr-2">🎒</span> 戶外裝備與其他配件
+                    </h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <input type="checkbox" id="item16" class="pack-item mt-1 mr-3 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500">
+                            <label for="item16" class="text-sm text-slate-600 cursor-pointer"><strong>輕量雙肩後背包</strong> (解放雙手，以便行進中保持平衡)</label>
+                        </li>
+                        <li class="flex items-start">
+                            <input type="checkbox" id="item17" class="pack-item mt-1 mr-3 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500">
+                            <label_for="item17" class="text-sm text-slate-600 cursor-pointer"><strong>雨傘 / 輕便雨衣</strong> (預防山區突如其來的午後陣雨)</label>
+                        </li>
+                        <li class="flex items-start">
+                            <input type="checkbox" id="item18" class="pack-item mt-1 mr-3 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500">
+                            <label for="item18" class="text-sm text-slate-600 cursor-pointer"><strong>環保保溫瓶/水瓶</strong> (補充步行消耗的大量水分)</label>
+                        </li>
+                        <li class="flex items-start">
+                            <input type="checkbox" id="item19" class="pack-item mt-1 mr-3 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500">
+                            <label for="item19" class="text-sm text-slate-600 cursor-pointer"><strong>隨身相機與備用電源</strong> (捕捉夜間與晨間的絕美生態)</label>
+                        </li>
+                        <li class="flex items-start">
+                            <input type="checkbox" id="item20" class="pack-item mt-1 mr-3 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500">
+                            <label for="item20" class="text-sm text-slate-600 cursor-pointer"><strong>環保垃圾密封袋</strong> (帶走個人垃圾，保護森林棲地)</label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-slate-800 rounded-2xl shadow-lg p-6 md:p-10 text-white">
+            <h2 class="text-3xl font-bold mb-8 text-center text-yellow-400">💡 行前黃金備忘錄</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-slate-700 p-6 rounded-xl border border-slate-600">
+                    <div class="text-4xl mb-4">🦟</div>
+                    <h3 class="text-xl font-bold mb-2 text-teal-300">小黑蚊警報</h3>
+                    <p class="text-sm text-slate-300 leading-relaxed">園區生態極佳，小黑蚊為原生物種。絕對要穿著長褲、襪子（勿穿涼鞋），並定時補噴有效防蚊液。</p>
+                </div>
+                <div class="bg-slate-700 p-6 rounded-xl border border-slate-600">
+                    <div class="text-4xl mb-4">🧥</div>
+                    <h3 class="text-xl font-bold mb-2 text-orange-300">洋蔥式穿搭</h3>
+                    <p class="text-sm text-slate-300 leading-relaxed">山區日夜溫差極大，白天高溫可能流汗，入夜後氣溫驟降。排汗內搭與防風保暖外套缺一不可。</p>
+                </div>
+                <div class="bg-slate-700 p-6 rounded-xl border border-slate-600">
+                    <div class="text-4xl mb-4">👣</div>
+                    <h3 class="text-xl font-bold mb-2 text-sky-300">足部舒緩準備</h3>
+                    <p class="text-sm text-slate-300 leading-relaxed">行程包含大量步行與騎車。穿著舒適好走的運動鞋，並隨身攜帶小毛巾，方便在「濯足園」泡腳後擦拭。</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-100 py-8 text-center text-slate-500 mt-10">
+        <p>© 2026 東勢林場兩天一夜視覺化行程指南 | Data Visualization Dashboard</p>
+    </footer>
+
+    <script>
+        function wrapString(str) {
+            if (str.length <= 16) return str;
+            const chunks = [];
+            let currentChunk = '';
+            for (let i = 0; i < str.length; i++) {
+                currentChunk += str[i];
+                if (currentChunk.length === 12 || (i === str.length - 1 && currentChunk.length > 0)) {
+                    chunks.push(currentChunk);
+                    currentChunk = '';
+                }
+            }
+            return chunks;
+        }
+
+        const commonTooltipConfig = {
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems[0];
+                            let label = item.chart.data.labels[item.dataIndex];
+                            if (Array.isArray(label)) {
+                                return label.join(' ');
+                            } else {
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        const ctxIntensity = document.getElementById('intensityChart').getContext('2d');
+        const labelsIntensity = [
+            'D1 10:00 抵達與天空步道', 
+            'D1 12:00 午餐休息', 
+            'D1 14:00 體能訓練場挑戰', 
+            'D1 16:30 溫泉足浴舒緩', 
+            'D1 19:30 夜間生態導覽', 
+            'D2 07:00 晨間森林步道', 
+            'D2 11:30 客家園區與午餐', 
+            'D2 14:00 東豐鐵馬道騎行'
+        ].map(wrapString);
+
+        new Chart(ctxIntensity, {
+            type: 'line',
+            data: {
+                labels: labelsIntensity,
+                datasets: [{
+                    label: '預估體力消耗指數 (0-100)',
+                    data: [30, 10, 95, 15, 40, 60, 20, 85],
+                    borderColor: '#ea580c',
+                    backgroundColor: 'rgba(234, 88, 12, 0.2)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#0d9488',
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: commonTooltipConfig.plugins,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: { borderDash: [5, 5] }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        const ctxTime = document.getElementById('timeChart').getContext('2d');
+        new Chart(ctxTime, {
+            type: 'doughnut',
+            data: {
+                labels: ['自然生態探索', '高強度體能活動', '用餐與文化體驗', '舒壓療癒(溫泉/休息)', '交通移動'].map(wrapString),
+                datasets: [{
+                    data: [35, 25, 20, 10, 10],
+                    backgroundColor: [
+                        '#0d9488', 
+                        '#ea580c', 
+                        '#eab308', 
+                        '#0284c7', 
+                        '#94a3b8'  
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                cutout: '65%',
+                plugins: {
+                    ...commonTooltipConfig.plugins,
+                    legend: { position: 'right' }
+                }
+            }
+        });
+
+        const ctxPacking = document.getElementById('packingChart').getContext('2d');
+        new Chart(ctxPacking, {
+            type: 'radar',
+            data: {
+                labels: [
+                    '防護：防蚊蟲叮咬準備',
+                    '適應：洋蔥式保暖衣物',
+                    '機動：排汗快乾與好走鞋',
+                    '護理：個人藥品與急救',
+                    '科技：相機與行動電源'
+                ].map(wrapString),
+                datasets: [{
+                    label: '重要性與需求指數',
+                    data: [100, 85, 90, 70, 75],
+                    backgroundColor: 'rgba(13, 148, 136, 0.3)',
+                    borderColor: '#0d9488',
+                    pointBackgroundColor: '#ea580c',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: '#ea580c',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: commonTooltipConfig.plugins,
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
+                        grid: { color: 'rgba(0, 0, 0, 0.1)' },
+                        pointLabels: {
+                            font: { family: "'Noto Sans TC', sans-serif", size: 11 },
+                            color: '#475569'
+                        },
+                        ticks: {
+                            display: false,
+                            min: 0,
+                            max: 100
+                        }
+                    }
+                }
+            }
+        });
+
+        const checkBoxes = document.querySelectorAll('.pack-item');
+        const progressBar = document.getElementById('progress-bar');
+        const progressPercent = document.getElementById('progress-percent');
+        const checkedCountText = document.getElementById('checked-count');
+        const totalCountText = document.getElementById('total-count');
+
+        function updatePackingProgress() {
+            const total = checkBoxes.length;
+            let checkedCount = 0;
+            checkBoxes.forEach(box => {
+                if (box.checked) checkedCount++;
+            });
+            const percent = Math.round((checkedCount / total) * 100);
+            
+            progressBar.style.width = percent + '%';
+            progressPercent.textContent = percent + '%';
+            checkedCountText.textContent = checkedCount;
+            totalCountText.textContent = total;
+        }
+
+        checkBoxes.forEach(box => {
+            box.addEventListener('change', updatePackingProgress);
+        });
+
+        updatePackingProgress();
+    </script>
+</body>
+</html>
